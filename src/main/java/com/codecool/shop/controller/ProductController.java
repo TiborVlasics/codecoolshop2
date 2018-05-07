@@ -2,6 +2,8 @@ package com.codecool.shop.controller;
 
 import com.codecool.shop.dao.implementation.*;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.codecool.shop.model.User;
 import com.codecool.shop.model.ShoppingCart;
@@ -29,18 +31,16 @@ import java.util.List;
 @WebServlet(urlPatterns = {"/"})
 public class ProductController extends HttpServlet {
 
+    private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         TemplateEngine engine = TemplateEngineUtil.getTemplateEngine(req.getServletContext());
         WebContext context = new WebContext(req, resp, req.getServletContext());
-
-
         SupplierDao supplierDataStore = SupplierDaoDB.getInstance();
         ProductDao productDataStore = ProductDaoDB.getInstance();
         ProductCategoryDao productCategoryDataStore = ProductCategoryDaoDB.getInstance();
-
 
         ProductCategory category;
         Supplier supplier;
@@ -64,17 +64,15 @@ public class ProductController extends HttpServlet {
         } else {
             supplier = supplierDataStore.getDefaultSupplier();
         }
-
         List<Product> products = supplierDataStore.filterProducts(
                 productCategoryDataStore.filterProducts(
                         productDataStore.getAll(), category), supplier);
 
-
         if (req.getParameter("ajax") != null) {
             JSONObject json = new JSONObject();
             int numberOfProducts = 0;
+            logger.debug("Processing request with products of size: {}", products.size());
             for (Product product : products) {
-
                 json.put("Product" + numberOfProducts, new JSONObject()
                         .put("title", product.getName())
                         .put("description", product.getDescription())
@@ -97,26 +95,22 @@ public class ProductController extends HttpServlet {
             context.setVariable("category", category);
             context.setVariable("supplier", supplier);
             context.setVariable("products", products);
-
             engine.process("product/index.html", context, resp.getWriter());
         }
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException
+    {
         String productId = request.getParameter("id");
+        logger.debug("Processing request with id: {}", productId);
         ShoppingCart shoppingCart = getShoppingCart(request);
-
         shoppingCart.addItem(Integer.parseInt(productId));
-
         float priceSum = shoppingCart.sumCart();
         int numberOfItems = shoppingCart.getNumberOfItems();
-
         JSONObject json = new JSONObject();
         json.put("priceSum", priceSum);
         json.put("numberOfItems", numberOfItems);
-
         response.setContentType("application/json");
         response.getWriter().print(json);
     }

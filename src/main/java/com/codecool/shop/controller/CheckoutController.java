@@ -5,6 +5,8 @@ import com.codecool.shop.model.Address;
 import com.codecool.shop.model.Order;
 import com.codecool.shop.model.ShoppingCart;
 import com.codecool.shop.model.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
@@ -18,6 +20,7 @@ import java.io.IOException;
 
 @WebServlet(urlPatterns = {"/checkout"})
 public class CheckoutController extends HttpServlet {
+    private static final Logger logger = LoggerFactory.getLogger(CheckoutController.class);
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -52,6 +55,10 @@ public class CheckoutController extends HttpServlet {
         ShoppingCart shoppingCart = user.shoppingCart;
         Order order = new Order(name, email, billAddressObj, shipAddressObj, phone, shoppingCart);
         user.orders.add(order);
+        logger.debug("Order name: {}", order.getName());
+        logger.debug("Order address: {}", order.getShippingAddress().getAddress());
+        logger.debug("Shopping cart's size: {}", shoppingCart.getContent().size());
+        logger.debug("Shopping cart's value {}", shoppingCart.sumCart());
         response.sendRedirect("/payment");
     }
 }

@@ -4,6 +4,8 @@ import com.codecool.shop.dao.ProductCategoryDao;
 import com.codecool.shop.model.Product;
 import com.codecool.shop.model.ProductCategory;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +15,7 @@ public class ProductCategoryDaoDB implements ProductCategoryDao, Queryhandler {
 
     private String connectionConfigPath = "src/main/resources/connection.properties";
     private static ProductCategoryDaoDB instance = null;
+    private static final Logger logger = LoggerFactory.getLogger(ProductCategoryDaoDB.class);
 
     public static ProductCategoryDaoDB getInstance() {
         if (instance == null) {
@@ -25,11 +28,11 @@ public class ProductCategoryDaoDB implements ProductCategoryDao, Queryhandler {
         this.connectionConfigPath = connectionConfigPath;
     }
 
-    public ProductCategoryDaoDB() {
-    }
+    public ProductCategoryDaoDB() { }
 
     @Override
     public void add(ProductCategory category) {
+        logger.debug("Adding product category {} to db", category.getName());
         if (category == null) {
             throw new IllegalArgumentException("Null category can not be added.");
         } else if ("".equals(category.getName())){
@@ -51,6 +54,7 @@ public class ProductCategoryDaoDB implements ProductCategoryDao, Queryhandler {
 
     @Override
     public ProductCategory find(int id) {
+        logger.debug("Finding category by id {}", id);
         String query = "SELECT * FROM product_categories WHERE id=?;";
         List<Object> parameters = new ArrayList<>();
         parameters.add(id);
@@ -67,12 +71,13 @@ public class ProductCategoryDaoDB implements ProductCategoryDao, Queryhandler {
                 result.setId(id);
             }
         }
-
+        logger.debug("Found {} categories", result);
         return result;
     }
 
     @Override
     public void remove(int id) {
+        logger.debug("Removing item with id {} from db", id);
         String query = "DELETE FROM product_categories WHERE id=?;";
         List<Object> parameters = new ArrayList<>();
         parameters.add(id);
@@ -82,9 +87,7 @@ public class ProductCategoryDaoDB implements ProductCategoryDao, Queryhandler {
         if (resultList.size() == 0){
             throw new IllegalArgumentException("There is no product category with such id in the database.");
         }
-
         Integer result = executeDMLQuery(query, parameters);
-
     }
 
     @Override
@@ -95,6 +98,7 @@ public class ProductCategoryDaoDB implements ProductCategoryDao, Queryhandler {
 
     @Override
     public Integer findIdByName(String name) {
+        logger.debug("Finding id by name {}", name);
         String query = "SELECT * FROM product_categories WHERE name=?;";
         List<Object> parameters = new ArrayList<>();
         parameters.add(name);
@@ -107,6 +111,7 @@ public class ProductCategoryDaoDB implements ProductCategoryDao, Queryhandler {
             System.out.println(ex.getMessage());
             ex.printStackTrace();
         }
+        logger.debug("Found {}", result);
         return result;
     }
 
@@ -117,6 +122,7 @@ public class ProductCategoryDaoDB implements ProductCategoryDao, Queryhandler {
 
     @Override
     public List<Product> filterProducts(List<Product> products, ProductCategory category) {
+        logger.debug("Filtering products by category {}", category.getName());
         if ((category.toString()).equals(getDefaultCategory().toString())) {
             return products;
         }
@@ -126,11 +132,13 @@ public class ProductCategoryDaoDB implements ProductCategoryDao, Queryhandler {
                 temp.add(product);
             }
         }
+        logger.debug("Found {} products", temp.size());
         return temp;
     }
 
     @Override
     public List<ProductCategory> getAll() {
+        logger.debug("Getting all categories from db");
         String query = "SELECT * FROM product_categories;";
         List<Map<String, Object>> resultList = executeSelectQuery(query);
 
@@ -145,7 +153,7 @@ public class ProductCategoryDaoDB implements ProductCategoryDao, Queryhandler {
             temp.setId(Integer.parseInt(id));
             results.add(temp);
         }
-
+        logger.debug("Got {} categories", results.size());
         return results;
     }
 

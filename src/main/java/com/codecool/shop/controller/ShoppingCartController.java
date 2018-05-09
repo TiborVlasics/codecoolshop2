@@ -36,12 +36,11 @@ public class ShoppingCartController extends HttpServlet{
         TemplateEngine engine = TemplateEngineUtil.getTemplateEngine(request.getServletContext());
         WebContext context = new WebContext(request, response, request.getServletContext());
         context.setVariable("shoppingcart", shoppingCart);
-
         engine.process("shoppingcart/shoppingcart.html", context, response.getWriter());
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         HttpSession session = request.getSession();
         if (session.isNew()) {
             session.setAttribute("UserObject", new User());

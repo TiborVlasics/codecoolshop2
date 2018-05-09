@@ -23,14 +23,14 @@ public class CheckoutController extends HttpServlet {
     private static final Logger logger = LoggerFactory.getLogger(CheckoutController.class);
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws  IOException {
         TemplateEngine engine = TemplateEngineUtil.getTemplateEngine(request.getServletContext());
         WebContext context = new WebContext(request, response, request.getServletContext());
         engine.process("checkout/checkout.html", context, response.getWriter());
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String name = request.getParameter("inputName");
         String email = request.getParameter("inputEmail");
         Integer phone = Integer.parseInt(request.getParameter("inputPhoneNumber"));

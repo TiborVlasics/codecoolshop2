@@ -7,19 +7,19 @@
             </pattern>
         </encoder>
     </appender>
-    <!--<appender name="db" class="ch.qos.logback.classic.db.DBAppender">-->
-        <!--<connectionSource-->
-                <!--class="ch.qos.logback.core.db.DriverManagerConnectionSource">-->
-            <!--<driverClass>org.postgresql.Driver</driverClass>-->
-            <!--<url>jdbc:postgresql://localhost:5432/simple</url>-->
-            <!--<user>postgres</user>-->
-            <!--<password>root</password> &lt;!&ndash; no password &ndash;&gt;-->
-        <!--</connectionSource>-->
-    <!--</appender>-->
+    <appender name="db" class="ch.qos.logback.classic.db.DBAppender">
+        <connectionSource
+                class="ch.qos.logback.core.db.DriverManagerConnectionSource">
+            <driverClass>org.postgresql.Driver</driverClass>
+            <url>jdbc:postgresql://localhost:5432/test_codecoolshop</url>
+            <user>postgres</user>
+            <password>postgres</password> <!-- no password -->
+        </connectionSource>
+    </appender>
 
     <!-- the level of the root level is set to DEBUG by default. -->
     <root level="DEBUG">
         <appender-ref ref="stdout" />
-        <!--<appender-ref ref="db" />-->
+        <appender-ref ref="db" />
     </root>
 </configuration>

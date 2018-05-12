@@ -19,6 +19,13 @@ import java.io.IOException;
 @WebServlet(urlPatterns = {"/checkout"})
 public class CheckoutController extends HttpServlet {
 
+    /**
+     * Loads checkout template on request
+     * @param request user's request happens when (s)he moves from shopping cart page
+     * @param response gives back the template to the user
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         TemplateEngine engine = TemplateEngineUtil.getTemplateEngine(request.getServletContext());
@@ -26,6 +33,13 @@ public class CheckoutController extends HttpServlet {
         engine.process("checkout/checkout.html", context, response.getWriter());
     }
 
+    /**
+     * It processes the user's data and redirects to the payment page
+     * @param request request by the user on hitting the payment button
+     * @param response redirects to payment
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String name = request.getParameter("inputName");

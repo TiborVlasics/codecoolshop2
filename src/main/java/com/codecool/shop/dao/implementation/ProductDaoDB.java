@@ -10,6 +10,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Dao implementation for handling product queries
+ * <p>Adding, removing etc.</p>
+ *
+ * @see com.codecool.shop.dao.implementation.Queryhandler
+ */
 public class ProductDaoDB implements ProductDao, Queryhandler {
 
     private String connection_config_path = "src/main/resources/connection.properties";
@@ -24,10 +30,20 @@ public class ProductDaoDB implements ProductDao, Queryhandler {
         return instance;
     }
 
+    /**
+     *Constructor
+     * <p>You need this if you want to join to the test database
+     * or any other databases with a specific path, different than our main db</p>
+     * @param configPath to join to different databases
+     */
     public ProductDaoDB(String configPath) {
         this.connection_config_path = configPath;
     }
 
+    /**
+     * Executes an insert query with the given product
+     * @param product an object with name, id, etc.
+     */
     @Override
     public void add(Product product) {
 
@@ -48,6 +64,11 @@ public class ProductDaoDB implements ProductDao, Queryhandler {
         executeDMLQuery(query, parameters);
     }
 
+    /**
+     * Executes a query with given id, to find a product
+     * @param id product id
+     * @return a product object
+     */
     @Override
     public Product find(int id) {
 
@@ -61,6 +82,11 @@ public class ProductDaoDB implements ProductDao, Queryhandler {
 
     }
 
+    /**
+     * <p>Removes a product from the product table of the database
+     * with the given id</p>
+     * @param id of the product to be removed
+     */
     @Override
     public void remove(int id) {
         String query = "DELETE FROM products\n" +
@@ -70,6 +96,10 @@ public class ProductDaoDB implements ProductDao, Queryhandler {
         executeDMLQuery(query, parameters);
     }
 
+    /**
+     * gets all products from database
+     * @return all products in database, converted to object
+     */
     @Override
     public List<Product> getAll() {
         String query = "SELECT id, name, description, default_price, default_currency, product_category, supplier " +
@@ -78,6 +108,11 @@ public class ProductDaoDB implements ProductDao, Queryhandler {
         return buildProductsList(results);
     }
 
+    /**
+     * Get all products from db with the gives supplier
+     * @param supplier a mentor object, who has a name, id, and different products
+     * @return all products with the given supplier
+     */
     @Override
     public List<Product> getBy(Supplier supplier) {
         String query = "SELECT id, name, description, default_price, default_currency, product_category, supplier " +
@@ -89,6 +124,11 @@ public class ProductDaoDB implements ProductDao, Queryhandler {
         return buildProductsList(results);
     }
 
+    /**
+     * Get all products from db with the gives category
+     * @param productCategory an object, with name, id, etc.
+     * @return all products with the given category
+     */
     @Override
     public List<Product> getBy(ProductCategory productCategory) {
         String query = "SELECT id, name, description, default_price, default_currency, product_category, supplier " +
@@ -100,18 +140,30 @@ public class ProductDaoDB implements ProductDao, Queryhandler {
         return buildProductsList(results);
     }
 
+    /**
+     * @return the number of products from the db's product table
+     */
     public int numberOfProducts() {
         String query = "SELECT COUNT(id) as count FROM products;";
         List<Map<String, Object>> results = executeSelectQuery(query);
         return Integer.parseInt(results.get(0).get("count").toString());
     }
 
+    /**
+     * Removes all products from the db's product table
+     */
     @Override
     public void removeAllProducts() {
         String query = "DELETE from products;";
         executeDMLQuery(query);
     }
 
+    /**
+     * This method makes a list of product objects from the data we get back from database
+     * used by all the methods in the class, which are returning data
+     * @param results the data returned by the query
+     * @return list of products
+     */
     private List<Product> buildProductsList(List<Map<String, Object>> results) {
         List<Product> products = new ArrayList<>();
         for (Map<String, Object> result : results) {

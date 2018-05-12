@@ -26,12 +26,32 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * <h3>Main page</h3>
+ *
+ * <p>Renders the main page with products that user can sort and add to it's shopping cart
+ * </p>
+ *
+ * This class is a web servlet
+ * <p>User can sort products by supplier and category
+ * Post method adds item to shopping cart, and updates the sum of shopping cart, and number of items
+ * with ajax.</p>
+ *
+ * @author Kristóf, Máté, Tibi and Zsolt
+ * @version 2.0
+ */
 @WebServlet(urlPatterns = {"/"})
 public class ProductController extends HttpServlet {
 
-
+    /**
+     * Gives back the main page with data to the user
+     *
+     * @param req a get request by users
+     * @param resp a response by the server
+     * @throws IOException it throws it sometimes
+     */
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
         TemplateEngine engine = TemplateEngineUtil.getTemplateEngine(req.getServletContext());
         WebContext context = new WebContext(req, resp, req.getServletContext());
@@ -40,7 +60,6 @@ public class ProductController extends HttpServlet {
         SupplierDao supplierDataStore = SupplierDaoDB.getInstance();
         ProductDao productDataStore = ProductDaoDB.getInstance();
         ProductCategoryDao productCategoryDataStore = ProductCategoryDaoDB.getInstance();
-
 
         ProductCategory category;
         Supplier supplier;
@@ -102,8 +121,16 @@ public class ProductController extends HttpServlet {
         }
     }
 
+    /**
+     * Gets called on clicking the add-item button, puts the item to the shopping cart
+     * Sends JSON object to javascript to refresh sum of cart and number of items
+     *
+     * @param request it's a server request
+     * @param response it's a response object
+     * @throws IOException sometimes
+     */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         String productId = request.getParameter("id");
         ShoppingCart shoppingCart = getShoppingCart(request);

@@ -4,14 +4,12 @@ import com.codecool.shop.dao.SupplierDao;
 import com.codecool.shop.model.Product;
 import com.codecool.shop.model.Supplier;
 
-import javax.xml.transform.Result;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 
 public class SupplierDaoDB implements SupplierDao, Queryhandler {
     private String connection_config_path = "src/main/resources/connection.properties";
@@ -41,6 +39,12 @@ public class SupplierDaoDB implements SupplierDao, Queryhandler {
         executeDMLQuery(query, parameters);
     }
 
+    /**
+     * Get a supplier by it's id from database and transforms it to a Supplier object.
+     *
+     * @param id to find supplier in database
+     * @return supplier object from the database with given id
+     */
     @Override
     public Supplier find(int id) {
         String query = "SELECT * FROM suppliers WHERE id = ?";

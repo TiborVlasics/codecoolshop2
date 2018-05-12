@@ -2,6 +2,12 @@ package com.codecool.shop.model;
 
 import java.util.Currency;
 
+/**
+ * A quest store product model object
+ *
+ * <p>It is represented as a card in the main page</p>
+ * <p>It has a price, supplier, currency, and category with getter and setter methods</p>
+ */
 public class Product extends BaseModel {
 
     private int defaultPrice;
@@ -9,7 +15,17 @@ public class Product extends BaseModel {
     private ProductCategory productCategory;
     private Supplier supplier;
 
-
+    /**
+     * Constructor
+     * all attributes required
+     *
+     * @param name it is a string
+     * @param defaultPrice it's an int
+     * @param currencyString it's a string
+     * @param description it's a longer string
+     * @param productCategory it is an object with name, id etc.
+     * @param supplier it is an object with name, id, etc.
+     */
     public Product(String name, int defaultPrice, String currencyString, String description, ProductCategory productCategory, Supplier supplier) {
         super(name, description);
         this.setPrice(defaultPrice, currencyString);

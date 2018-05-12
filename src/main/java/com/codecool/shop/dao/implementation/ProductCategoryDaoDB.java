@@ -28,6 +28,10 @@ public class ProductCategoryDaoDB implements ProductCategoryDao, Queryhandler {
     public ProductCategoryDaoDB() {
     }
 
+    /**
+     * <p>Adds new product category to database</p>
+     * @param category a ProductCategory object
+     */
     @Override
     public void add(ProductCategory category) {
         if (category == null) {
@@ -67,7 +71,6 @@ public class ProductCategoryDaoDB implements ProductCategoryDao, Queryhandler {
                 result.setId(id);
             }
         }
-
         return result;
     }
 
@@ -82,7 +85,6 @@ public class ProductCategoryDaoDB implements ProductCategoryDao, Queryhandler {
         if (resultList.size() == 0){
             throw new IllegalArgumentException("There is no product category with such id in the database.");
         }
-
         Integer result = executeDMLQuery(query, parameters);
 
     }

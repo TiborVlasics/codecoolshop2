@@ -16,6 +16,13 @@ import java.io.IOException;
 @WebServlet(urlPatterns = {"/payment"})
 public class PaymentController extends HttpServlet {
 
+    /**
+     * Gives back an html file to user
+     * @param req a request sent to server when user clicks sends checkout information
+     * @param resp server respond with sending an html
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         TemplateEngine engine = TemplateEngineUtil.getTemplateEngine(req.getServletContext());
@@ -23,6 +30,13 @@ public class PaymentController extends HttpServlet {
         engine.process("payment/payment.html", context, resp.getWriter());
     }
 
+    /**
+     * Set the users order to payed, clears her shopping cart
+     * @param req a request when pay button clicked
+     * @param resp Page responds with a message, that payment is done
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();

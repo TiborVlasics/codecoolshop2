@@ -15,8 +15,19 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+/**
+ * Class for the loading shopping cart page, and the processes on the  shopping cart page
+ */
 @WebServlet (urlPatterns = "/shoppingcart")
 public class ShoppingCartController extends HttpServlet{
+
+    /**
+     * Sends html for shopping cart page to the user
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
@@ -37,6 +48,13 @@ public class ShoppingCartController extends HttpServlet{
         engine.process("shoppingcart/shoppingcart.html", context, response.getWriter());
     }
 
+    /**
+     * Handles shopping cart modifications, (removing, adding new item)
+     * @param request request on clicking add/remove buttons
+     * @param response displays new information on page
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
